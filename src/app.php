@@ -20,31 +20,11 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * 
  */
-$APP_DIRECTORY = dirname(__DIR__);
 
-require_once($APP_DIRECTORY . '/vendor/autoload.php');
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
 
-$request = Request::createFromGlobals();
-$routes = include($APP_DIRECTORY . '/src/app.php');
+$routes = new Routing\RouteCollection();
+$routes->add('hello', new Routing\Route('/hello/{name}', array('name' =>  'World')));
+$routes->add('bye', new Routing\Route('/bye'));
 
-$context = new Routing\RequestContext();
-$context->fromRequest($request);
-$matcher = new Routing\Matcher\UrlMatcher($routes, $context);
-
-try {
-    extract($matcher->match($request->getPathInfo()), EXTR_SKIP);
-    ob_start();
-    include(sprintf($APP_DIRECTORY . '/src/pages/%s.php', $_route));
-
-    $response = new Response(ob_get_clean());
-} catch(Routing\Exception\ResourceNotFound $e) {
-    $resonse = new Response('Not Found', 404);
-} catch (Exception $e) {
-    $response = new Response('An error has occured', 500);
-}
-
-$response->send();
+return $routes;
