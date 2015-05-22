@@ -20,8 +20,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * 
  */
-
-$name = $request->get('name', 'World');
 ?>
 
 Hello <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>
