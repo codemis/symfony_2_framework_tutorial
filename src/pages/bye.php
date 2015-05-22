@@ -21,4 +21,6 @@
  * 
  */
 
-$response->setContent('Goodbye!');
+?>
+
+Goodbye!
