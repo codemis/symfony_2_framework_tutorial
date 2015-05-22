@@ -9,7 +9,7 @@ This repository is following the branching technique described in [this blog pos
 
 This tool uses [Composer](http://getcomposer.org/) to install the project specific libraries.
 
-Questions or problems? Please post them on the [issue tracker](https://github.com/MissionalDigerati/vts_cakephp_plugin/issues). You can contribute changes by forking the project and submitting a pull request.
+Questions or problems? Please post them on the [issue tracker](https://github.com/codemis/symfony_2_framework_tutorial/issues). You can contribute changes by forking the project and submitting a pull request.
 
 License
 -------
