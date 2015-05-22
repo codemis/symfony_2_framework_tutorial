@@ -21,10 +21,14 @@
  * 
  */
 
-require_once(__DIR__ . '/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php');
+require_once(__DIR__ . '/autoload.php');
 
-use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-$loader = new UniversalClassLoader();
-$loader->register();
-$loader->registerNamespace('Symfony\\Component\\HttpFoundation', __DIR__ . '/vendor/symfony/http-foundation');
+$request = Request::createFromGlobals();
+
+$input = $request->get('name', 'World');
+
+$response = new Response(sprintf('Hello %s', htmlspecialchars($input, ENT_QUOTES, 'UTF-8')));
+$response->send();
