@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteBase /
+
+        # Removes front.php from URLs
+        RewriteCond %{THE_REQUEST} ^GET.*front\.php [NC]
+        RewriteCond %{REQUEST_URI} !/src/.* [NC]
+        RewriteRule (.*?)front\.php/*(.*) /$1$2 [R=301,NE,L]
+
+        # Directs all web requests through the site index file
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule ^(.*)$ /front.php/$1 [L]
+</IfModule>
