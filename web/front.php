@@ -22,7 +22,7 @@
  */
 $APP_DIRECTORY = dirname(__DIR__);
 
-require_once($APP_DIRECTORY . '/src/autoload.php');
+require_once($APP_DIRECTORY . '/vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
