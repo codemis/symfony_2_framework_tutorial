@@ -21,14 +21,26 @@
  * 
  */
 
-use Symfony\Component\Routing;
+namespace Calendar\Controller;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Calendar\Model\LeapYear;
+/**
+ * A controller for handling wether it is Leap Year or not
+ *
+ * @package default
+ * @author Johnathan Pulos <johnathan@missionaldigerati.org>
+ **/
+class LeapYearController 
+{
+    public function indexAction(Request $request, $year)
+    {
+        $leapYear = new LeapYear();
+        if ($leapYear->isLeapYear($year)) {
+            return new Response('Yep, this is a Leap Year!');
+        }
 
-$routes = new Routing\RouteCollection();
-$routes->add('leap_year', new Routing\Route('/is-leap-year/{year}', array(
-        'year'  =>  null,
-        '_controller'   =>  'Calendar\\Controller\\LeapYearController::indexAction'
-    )
-));
-
-return $routes;
+        return new Response('Nope, this is not a Leap Year!');
+    }
+} // END class LeapYearController
