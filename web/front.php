@@ -28,14 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
 
-function render_template($request) {
-    extract($request->attributes->all(), EXTR_SKIP);
-    ob_start();
-    include sprintf(APP_DIRECTORY . '/src/pages/%s.php', $_route);
-
-    return new Response(ob_get_clean());
-}
-
 $request = Request::createFromGlobals();
 $routes = include(APP_DIRECTORY . '/src/app.php');
 
