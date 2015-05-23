@@ -20,27 +20,32 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * 
  */
-$APP_DIRECTORY = dirname(__DIR__);
+define('APP_DIRECTORY', dirname(__DIR__));
 
-require_once($APP_DIRECTORY . '/vendor/autoload.php');
+require_once(APP_DIRECTORY . '/vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
 
+function render_template($request) {
+    extract($request->attributes->all(), EXTR_SKIP);
+    ob_start();
+    include sprintf(APP_DIRECTORY . '/src/pages/%s.php', $_route);
+
+    return new Response(ob_get_clean());
+}
+
 $request = Request::createFromGlobals();
-$routes = include($APP_DIRECTORY . '/src/app.php');
+$routes = include(APP_DIRECTORY . '/src/app.php');
 
 $context = new Routing\RequestContext();
 $context->fromRequest($request);
 $matcher = new Routing\Matcher\UrlMatcher($routes, $context);
 
 try {
-    extract($matcher->match($request->getPathInfo()), EXTR_SKIP);
-    ob_start();
-    include(sprintf($APP_DIRECTORY . '/src/pages/%s.php', $_route));
-
-    $response = new Response(ob_get_clean());
+    $request->attributes->add($matcher->match($request->getPathInfo()));
+    $response = call_user_func($request->attributes->get('_controller'), $request);
 } catch(Routing\Exception\ResourceNotFound $e) {
     $resonse = new Response('Not Found', 404);
 } catch (Exception $e) {
