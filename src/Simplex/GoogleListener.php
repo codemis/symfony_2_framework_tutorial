@@ -20,31 +20,38 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * 
  */
-define('APP_DIRECTORY', dirname(__DIR__));
 
-require_once(APP_DIRECTORY . '/vendor/autoload.php');
+namespace Simplex;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing;
-use Symfony\Component\HttpKernel;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-$request = Request::createFromGlobals();
-$routes = include(APP_DIRECTORY . '/src/app.php');
+/**
+ * Add the Google Code to the page
+ *
+ * @package default
+ * @author Johnathan Pulos <johnathan@missionaldigerati.org>
+ **/
+class GoogleListener implements EventSubscriberInterface
+{
 
-$context = new Routing\RequestContext();
-$context->fromRequest($request);
-$matcher = new Routing\Matcher\UrlMatcher($routes, $context);
-$resolver = new HttpKernel\Controller\ControllerResolver();
+  public static function getSubscribedEvents()
+  {
+    return array('response' =>  'onResponse');
+  }
 
-$dispatcher = new EventDispatcher();
+  public function onResponse(ResponseEvent $event)
+  {
+    $response = $event->getResponse();
+    $headers = $response->headers;
 
-$dispatcher->addSubscriber(new Simplex\ContentLengthListener());
+    if ($response->isRedirection()
+        || ($headers->has('Content-Type') && false === strpos($headers->get('Content-Type'), 'html'))
+        || 'html' !== $event->getRequest()->getRequestFormat()
+    ) {
+        return;
+    }
 
-$dispatcher->addSubscriber(new Simplex\GoogleListener());
+    $response->setContent($response->getContent() . ' GA CODE');
+  }
 
-$framework = new Simplex\Framework($dispatcher, $matcher, $resolver);
-$response = $framework->handle($request);
-
-$response->send();
+} // END class GoogleListener
