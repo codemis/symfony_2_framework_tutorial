@@ -38,9 +38,13 @@ class LeapYearController
     {
         $leapYear = new LeapYear();
         if ($leapYear->isLeapYear($year)) {
-            return new Response('Yep, this is a Leap Year!');
+            $response  = new Response('Yep, this is a Leap Year!');
+        } else {
+            $response = new Response('Nope, this is not a Leap Year!');
         }
+        
+        $response->setTtl(10);
 
-        return new Response('Nope, this is not a Leap Year!');
+        return $response;
     }
 } // END class LeapYearController
